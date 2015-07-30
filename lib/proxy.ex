@@ -48,7 +48,7 @@ defmodule Proxy do
     # if it is chunked or not and act accordingly to support streaming.
     #
     # We may also need to delete other headers in a proxy.
-    headers = List.keydelete(headers, "Transfer-Encoding", 1)
+    headers = List.keydelete(headers, "Transfer-Encoding", 0)
 
     %{conn | resp_headers: headers}
     |> send_resp(status, body)
