@@ -2,13 +2,15 @@ defmodule Proxy do
   use Plug.Builder
   import Plug.Conn
 
-  @target "http://google.com"
+  @kake_target "http://localhost:5000"
+  @default_target "http://localhost:8080"
 
   plug Plug.Logger
+  plug Plug.Static, at: "/images", from: Path.expand("~/khan/webapp/images")
   plug :dispatch
 
   def start(_argv) do
-    port = 4001
+    port = 8081
     IO.puts "Running Proxy with Cowboy on http://localhost:#{port}"
     Plug.Adapters.Cowboy.http __MODULE__, [], port: port
     :timer.sleep(:infinity)
@@ -17,7 +19,11 @@ defmodule Proxy do
   def dispatch(conn, _opts) do
     # Start a request to the client saying we will stream the body.
     # We are simply passing all req_headers forward.
-    {:ok, client} = :hackney.request(:get, uri(conn), conn.req_headers, :stream, [])
+    method = (
+      conn.method
+      |> String.downcase
+      |> String.to_atom)
+    {:ok, client} = :hackney.request(method, uri(conn), conn.req_headers, :stream, [])
 
     conn
     |> write_proxy(client)
@@ -55,7 +61,17 @@ defmodule Proxy do
   end
 
   defp uri(conn) do
-    base = @target <> "/" <> Enum.join(conn.path_info, "/")
+    url = Enum.join(conn.path_info, "/")
+    {target, mod_url} = if String.match?(url, ~r/_kake/) do
+      {@kake_target, String.replace(url, "_kake/", "")}
+    else
+      if String.match?(url, ~r/genfiles/) do
+        {@kake_target, url}
+      else
+        {@default_target, url}
+      end
+    end
+    base = target <> "/" <> mod_url
     case conn.query_string do
       "" -> base
       qs -> base <> "?" <> qs
