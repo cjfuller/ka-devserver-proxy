@@ -7,6 +7,8 @@ This configuration:
 - passes anything containing `_kake` or `genfiles` directly to kake (assumed to be on port 5000; TODO: allow other ports)
 - sends everything else on to the devserver (assumed to be on port 8080)
 
+TODO: handle the websocket for the react hotloader
+
 ### Installation
 
 You'll need elixir >= 1.0:
