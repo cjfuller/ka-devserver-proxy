@@ -1,26 +1,33 @@
-## Proxy
+## ka-devserver-proxy
 
-A HTTP proxy skeleton written in Elixir with Plug (Adapter) + Cowboy (Server) + Hackney (Client).
+A HTTP proxy taken from https://github.com/josevalim/proxy, with custom configuration for proxying the KA devserver.
 
-Not complete in any way (no proxy headers set) but feel free to use it as starting point.
+This configuration:
+- serves images and fonts directly
+- passes anything containing `_kake` or `genfiles` directly to kake (assumed to be on port 5000; TODO: allow other ports)
+- sends everything else on to the devserver (assumed to be on port 8080)
 
-Requires Elixir v1.0.
+### Installation
 
-### Development
+You'll need elixir >= 1.0:
+http://elixir-lang.org/install.html
+Mac OS users, it's just: `brew install elixir`
 
-To run it in development:
+Then, clone this repository (`git clone https://github.com/cjfuller/ka-devserver-proxy.git`).
+`cd ka-devserver-proxy`
 
-    mix deps.get
-    mix serve
+Install dependencies:
+`mix deps.get`
 
-### Production
+### Running
 
-To run it in production:
+`mix serve`
 
-    mix deps.get
-    MIX_ENV=prod mix do compile, compile.protocols
-    MIX_ENV=prod elixir -pa _build/prod/consolidated -S mix serve
+Then access the devserver on port 8081 instead of 8080 to get the proxying.
 
 ### License
 
-MIT-LICENSE
+The proxy code is copyright by Jose Valim and licenced under the MIT License.
+Original code is at https://github.com/josevalim/proxy
+
+My modifications are also MIT Licensed.
