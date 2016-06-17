@@ -7,6 +7,7 @@ defmodule Proxy do
 
   plug Plug.Logger
   plug Plug.Static, at: "/images", from: Path.expand("~/khan/webapp/images")
+  plug Plug.Static, at: "/fonts", from: Path.expand("~/khan/webapp/fonts")
   plug :dispatch
 
   def start(_argv) do
