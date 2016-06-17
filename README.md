@@ -16,6 +16,7 @@ http://elixir-lang.org/install.html
 Mac OS users, it's just: `brew install elixir`
 
 Then, clone this repository (`git clone https://github.com/cjfuller/ka-devserver-proxy.git`).
+
 `cd ka-devserver-proxy`
 
 Install dependencies:
